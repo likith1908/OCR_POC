@@ -1,0 +1,13 @@
+flask==3.1.0
+torch==2.6.0
+torchvision==0.21.0
+transformers==4.49.0
+pymupdf==1.25.3
+google-generativeai==0.8.4
+accelerate==1.4.0
+numpy==2.2.3
+pillow==11.1.0
+requests==2.32.3
+python-dotenv==1.0.1
+waitress==3.0.1
+gunicorn==23.0.0
