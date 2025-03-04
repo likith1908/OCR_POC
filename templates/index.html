@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        textarea {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+        }
+        input[type="file"] {
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>OCR</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="pdf_file">Upload PDF File:</label>
+            <input type="file" id="pdf_file" name="pdf_file" accept=".pdf" required>
+            <button type="submit">Process PDF</button>
+        </form>
+        <textarea id="jsonOutput" placeholder="JSON output will appear here..."></textarea>
+        <div id="error"></div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const pdfFile = document.getElementById('pdf_file').files[0];
+            formData.append('pdf_file', pdfFile);
+
+            document.getElementById('jsonOutput').value = 'Processing...';
+            document.getElementById('error').textContent = '';
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('jsonOutput').value = result.json_output;
+                } else {
+                    document.getElementById('error').textContent = result.error || 'An error occurred';
+                    document.getElementById('jsonOutput').value = '';
+                }
+            } catch (error) {
+                document.getElementById('error').textContent = 'Network error: ' + error.message;
+                document.getElementById('jsonOutput').value = '';
+            }
+        });
+    </script>
+</body>
+</html>
